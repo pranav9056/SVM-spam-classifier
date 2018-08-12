@@ -7,7 +7,7 @@ function word_indices = processEmail(email_contents)
 %
 
 % Load Vocabulary
-vocabList = getVocabList();
+[vocabList, starting] = getVocabList();
 
 % Init return value
 word_indices = [];
@@ -74,7 +74,23 @@ while ~isempty(email_contents)
     if length(str) < 1
        continue;
     end
-
+    
+    ch = str(1);
+    if starting.isKey(ch)
+        st = starting(ch);
+        if ch == 'z'
+            ed = size(vocabList,1);
+        else
+            ed = starting(char(ch+1))-1;
+        end
+        for ind = st:ed
+            word = vocabList{ind};
+            if strcmp(str, word) == 1
+                word_indices = [word_indices ; ind];
+                break;
+            end
+        end
+    end
     % Look up the word in the dictionary and add to word_indices if
     % found
     % ====================== YOUR CODE HERE ======================
